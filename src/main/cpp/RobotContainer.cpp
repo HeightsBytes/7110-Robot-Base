@@ -52,7 +52,9 @@ using namespace DriveConstants;
 #define Y_OUT [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(hb::sgn(m_driverController.GetLeftX()) * pow(m_driverController.GetLeftX(), 2), 0.01));}
 #define ROT_OUT [this] {return -frc::ApplyDeadband(hb::sgn(m_driverController.GetRightX()) * pow(m_driverController.GetRightX(), 2), 0.025) * DriveConstants::kMaxAngularSpeed.value();}
 
-RobotContainer::RobotContainer() {
+RobotContainer::RobotContainer() : 
+  m_auto(&m_arm, &m_claw, &m_drive)
+{
 
   /**
    * Adding options to chooser should be done as such
@@ -63,15 +65,15 @@ RobotContainer::RobotContainer() {
   // m_chooser.AddOption("Test1", new FollowPPPathCMD(&m_drive, "Straight Line"));
   // m_chooser.AddOption("L Path", new FollowPPPathCMD(&m_drive, "BackForth"));
   // m_chooser.AddOption("T Drive With Time", new TestAutoDWT(&m_drive));
-  m_chooser.AddOption("CommOut", new DriveWithTime(&m_drive, -2_mps, 0_mps, 0_rad_per_s, 1.25_s, false));
-  m_chooser.AddOption("CubeNBalance", new CubeAndBalance(&m_drive, &m_arm, &m_claw));
-  m_chooser.AddOption("ConeNBalance", new ConeAndBalance(&m_drive, &m_arm, &m_claw));
-  m_chooser.AddOption("PathPlanner Test", new FollowPPPathCMD(&m_drive, "BackForth", false));
-  m_chooser.AddOption("RedPathTest", new FollowPPPathCMD(&m_drive, "Red", true));
-  m_chooser.AddOption("RedRotateBalance", new FollowPPPathCMD(&m_drive, "RotateBalance", true));
-  // m_chooser.AddOption("Test", new TestCMD(&m_drive));
+  // m_chooser.AddOption("CommOut", new DriveWithTime(&m_drive, -2_mps, 0_mps, 0_rad_per_s, 1.25_s, false));
+  // m_chooser.AddOption("CubeNBalance", new CubeAndBalance(&m_drive, &m_arm, &m_claw));
+  // m_chooser.AddOption("ConeNBalance", new ConeAndBalance(&m_drive, &m_arm, &m_claw));
+  // m_chooser.AddOption("PathPlanner Test", new FollowPPPathCMD(&m_drive, "BackForth", false));
+  // m_chooser.AddOption("RedPathTest", new FollowPPPathCMD(&m_drive, "Red", true));
+  // m_chooser.AddOption("RedRotateBalance", new FollowPPPathCMD(&m_drive, "RotateBalance", true));
+  // // m_chooser.AddOption("Test", new TestCMD(&m_drive));
 
-  frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
+  // frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
 
   frc::SmartDashboard::PutData("Arm", &m_arm);
   frc::SmartDashboard::PutData("Claw", &m_claw);
@@ -161,6 +163,6 @@ void RobotContainer::ConfigureOperatorButtons() {
 }
 
 
-frc2::Command* RobotContainer::GetAutonomousCommand() {
-  return m_chooser.GetSelected();
+frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
+  return m_auto.GetAutonomousCommand();
 }

@@ -64,6 +64,10 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
     void SetPosition(ArmPosition position);
 
+    void SetTarget(State state) {
+      m_targetState = state;
+    }
+
     void Stow();
 
     void MidCone();
