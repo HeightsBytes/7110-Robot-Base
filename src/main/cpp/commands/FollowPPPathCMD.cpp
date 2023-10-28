@@ -25,7 +25,7 @@ void FollowPPPathCMD::Initialize() {
   auto initState = m_traj.getInitialState();
   auto initPose = frc::Pose2d(initState.pose.Translation(), m_drive->gyro.GetRot2d());
   initPose.TransformBy(frc::Transform2d(frc::Translation2d(0_m, 0_m), 180_deg));
-  frc::Rotation2d initAngle = initState.holonomicRotation - frc::Rotation2d(180_deg);
+  // frc::Rotation2d initAngle = initState.holonomicRotation - frc::Rotation2d(180_deg);
   printf("Init Rot: %5.2f\n", initPose.Rotation().Degrees().value());
   m_drive->VisionEnabled(m_visionEnabled);
   // m_drive->ResetEncoders();
