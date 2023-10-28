@@ -108,7 +108,6 @@ void ArmSubsystem::SetPosition(ArmPosition position) {
 
 void ArmSubsystem::Stow() {
     m_targetState = State::kStow;
-    m_target = Positions.Stow;
 }
 
 void ArmSubsystem::MidCone() {
