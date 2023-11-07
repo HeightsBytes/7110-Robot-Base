@@ -24,6 +24,7 @@
 
 using namespace DriveConstants;
 using namespace DriveConstants::CanIds;
+using namespace pathplanner;
 
 DriveSubsystem::DriveSubsystem()
     : 
@@ -54,6 +55,14 @@ DriveSubsystem::DriveSubsystem()
                     m_target(Target::kCone)
                      {
                       frc::SmartDashboard::PutData("Field", &m_field);
+                      //  AutoBuilder::configureHolonomic(
+                      //     [this] {return GetPose();},
+                      //     [this](frc::Pose2d pose) {SetPose(pose);},
+                      //     [this] {return GetVelocity();},
+                      //     [this](frc::ChassisSpeeds speeds) {DriveRobotRelative(speeds, true);},
+                      //     AutoConstants::kConfig, 
+                      //     this
+                      //  );
                     }
 
 void DriveSubsystem::Periodic() {
@@ -74,6 +83,8 @@ void DriveSubsystem::Periodic() {
   }
 
   m_field.SetRobotPose(m_poseEstimator.GetEstimatedPosition());
+
+  
 
   // printf("speed: %5.2f\tangle: %5.2f\n", m_rearLeft.GetState().speed.value(), m_rearLeft.GetState().angle.Degrees().value());
 
@@ -116,6 +127,29 @@ void DriveSubsystem::DriveFieldRelative(frc::ChassisSpeeds speeds) {
   m_frontRight.SetDesiredState(fr);
   m_rearLeft.SetDesiredState(bl);
   m_rearRight.SetDesiredState(br); 
+}
+
+void DriveSubsystem::DriveRobotRelative(frc::ChassisSpeeds speeds, bool auton) {
+  auto states = kDriveKinematics.ToSwerveModuleStates(speeds);
+  kDriveKinematics.DesaturateWheelSpeeds(&states, auton ? AutoConstants::kMaxSpeed : DriveConstants::kMaxSpeed);
+
+  auto [fl, fr, bl, br] = states;
+
+  m_frontLeft.SetDesiredState(fl);
+  m_frontRight.SetDesiredState(fr);
+  m_rearLeft.SetDesiredState(bl);
+  m_rearRight.SetDesiredState(br); 
+}
+
+frc::ChassisSpeeds DriveSubsystem::GetVelocity() {
+  return kDriveKinematics.ToChassisSpeeds(
+  {
+    m_frontLeft.GetState(),
+    m_frontRight.GetState(),
+    m_rearLeft.GetState(),
+    m_rearRight.GetState()
+  }
+  );
 }
 
 void DriveSubsystem::SetModuleStates(

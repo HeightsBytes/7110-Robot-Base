@@ -21,6 +21,9 @@
 #include <units/voltage.h>
 #include <units/angular_acceleration.h>
 
+#include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
+#include <pathplanner/lib/util/PIDConstants.h>
+
 #include "subsystems/ArmSubsystem.h"
 
 #include <numbers>
@@ -153,6 +156,17 @@ inline const auto kMaxAngularAcceleration = units::unit_t<radians_per_second_squ
 inline const double kPXController = 0.5;
 inline const double kPYController = 0.5;
 inline const double kPThetaController = 0.5;
+
+inline const pathplanner::PIDConstants kPIDTrans{1, 0, 0};
+inline const pathplanner::PIDConstants kPIDRot{1, 0, 0};
+
+inline const pathplanner::HolonomicPathFollowerConfig kConfig{
+    kPIDTrans, 
+    kPIDRot, 
+    4.5_mps, 
+    0.53881_m, /**sqrt(2 * 15in ^ 2)**/
+    pathplanner::ReplanningConfig()
+};
 
 
 extern const frc::TrapezoidProfile<units::radians>::Constraints

@@ -37,11 +37,16 @@
 
 #include <array>
 
+// Pathplanner
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
+#include <pathplanner/lib/util/PIDConstants.h>
+#include <pathplanner/lib/util/ReplanningConfig.h>
+
 #include "Constants.h"
 #include "utils/swerve/SwerveModule.h"
 #include "utils/swerve/PigeonGyro.h"
 #include "subsystems/VisionSubsystem.h"
-
 
 class DriveSubsystem : public frc2::SubsystemBase {
  public:
@@ -76,6 +81,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
              bool fieldRelative);
 
   void DriveFieldRelative(frc::ChassisSpeeds);
+
+  void DriveRobotRelative(frc::ChassisSpeeds, bool auton);
+
+  frc::ChassisSpeeds GetVelocity();
 
 
   /**

@@ -36,7 +36,6 @@
 #include "commands/DefaultDriveCMD.h"
 
 #include "Constants.h"
-#include "AutoManager.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -75,8 +74,6 @@ class RobotContainer {
 
   // The chooser for the autonomous routines
   // frc::SendableChooser<frc2::Command*> m_chooser;
-
-  AutoManager m_auto;
 
   // Extra Triggers
   frc2::Trigger m_targetTrigger{[this]() -> bool {return m_drive.GetTarget() == DriveSubsystem::Target::kCone;}};

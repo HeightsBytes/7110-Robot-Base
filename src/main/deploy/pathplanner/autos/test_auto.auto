@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.9,
+      "y": 1.6
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "arm_mid_cone"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "claw_open"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "arm_stow"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "cone_2_b"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null
+}

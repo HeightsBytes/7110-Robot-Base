@@ -31,7 +31,10 @@
 #include <units/angle.h>
 #include <units/velocity.h>
 
-#include "commands/FollowPPPathCMD.h"
+#include <pathplanner/lib/commands/PathPlannerAuto.h>
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/auto/NamedCommands.h>
+
 #include "commands/autos/CubeAndBalance.h"
 #include "commands/autos/ConeAndBalance.h"
 #include "commands/DriveWithTime.h"
@@ -39,6 +42,8 @@
 #include "commands/DriveWithHeading.h"
 #include "commands/autos/TestCMD.h"
 #include "commands/ConeScore.h"
+#include "commands/ArmTo.h"
+#include "commands/ClawFor.h"
 
 #include "utils/cams/Limelight.h"
 #include "subsystems/DriveSubsystem.h"
@@ -46,14 +51,14 @@
 #include "utils/Util.h"
 
 using namespace DriveConstants;
+using namespace pathplanner;
 
 // Drive macros ensure that all outputs stay the same
 #define X_OUT [this] {return -m_speedLimitx.Calculate(frc::ApplyDeadband(hb::sgn(m_driverController.GetLeftY()) * pow(m_driverController.GetLeftY(), 2), 0.01));}
 #define Y_OUT [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(hb::sgn(m_driverController.GetLeftX()) * pow(m_driverController.GetLeftX(), 2), 0.01));}
 #define ROT_OUT [this] {return -frc::ApplyDeadband(hb::sgn(m_driverController.GetRightX()) * pow(m_driverController.GetRightX(), 2), 0.025) * DriveConstants::kMaxAngularSpeed.value();}
 
-RobotContainer::RobotContainer() : 
-  m_auto(&m_arm, &m_claw, &m_drive)
+RobotContainer::RobotContainer()
 {
 
   /**
@@ -72,6 +77,16 @@ RobotContainer::RobotContainer() :
   // m_chooser.AddOption("RedPathTest", new FollowPPPathCMD(&m_drive, "Red", true));
   // m_chooser.AddOption("RedRotateBalance", new FollowPPPathCMD(&m_drive, "RotateBalance", true));
   // // m_chooser.AddOption("Test", new TestCMD(&m_drive));
+
+  // Arm Commands
+  // NamedCommands::registerCommand("arm_mid_cone", std::make_shared<ArmTo>(&m_arm, ArmSubsystem::State::kMidCone));
+  // NamedCommands::registerCommand("arm_mid_cube", std::make_shared<ArmTo>(&m_arm, ArmSubsystem::State::kMidCubeConePickup));
+  // NamedCommands::registerCommand("arm_stow", std::make_shared<ArmTo>(&m_arm, ArmSubsystem::State::kStow));
+
+  // // Claw Commands
+  // NamedCommands::registerCommand("claw_open", std::make_shared<ClawFor>(&m_claw, ClawFor::Direction::kBackwards, 0.7_s));
+  // NamedCommands::registerCommand("claw_close", std::make_shared<ClawFor>(&m_claw, ClawFor::Direction::kForwards, 0.7_s));
+
 
   // frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
 
@@ -161,16 +176,6 @@ void RobotContainer::ConfigureOperatorButtons() {
     frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kLeftBumper).WhenPressed(frc2::InstantCommand([this] {m_claw.Run(0.5);})).WhenReleased(
       frc2::InstantCommand([this] {m_claw.Run(0.0);}));
 
-    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kA).WhenPressed(FollowPPPathCMD(&m_drive, "Straight Line", true, true));
-
-    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kB).WhenPressed(FollowPPPathCMD(&m_drive, "Hook", true, true));
-
-    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kY).WhenPressed(FollowPPPathCMD(&m_drive, "Charge Station", true, true));
-
-    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kX).WhenPressed(FollowPPPathCMD(&m_drive, "Hook 2", true, true));
-
-    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kLeftStick).WhenPressed(FollowPPPathCMD(&m_drive, "Cone and Balance", true, true));
-
     // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kStart).WhenPressed(frc2::InstantCommand([this] {m_drive.ResetEncoders();}));
 
   #endif
@@ -178,5 +183,6 @@ void RobotContainer::ConfigureOperatorButtons() {
 
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return m_auto.GetAutonomousCommand();
+  // return AutoBuilder::buildAuto("nullopt");
+  return frc2::CommandPtr(nullptr);
 }
