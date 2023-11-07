@@ -137,6 +137,10 @@ void RobotContainer::ConfigureDriverButtons() {
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(
     ConeScore(&m_drive, X_OUT));
 
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(
+    [this] {m_drive.ToggleVision();}
+  );
+
 }
 
 void RobotContainer::ConfigureOperatorButtons() {
@@ -156,6 +160,16 @@ void RobotContainer::ConfigureOperatorButtons() {
 
     frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kLeftBumper).WhenPressed(frc2::InstantCommand([this] {m_claw.Run(0.5);})).WhenReleased(
       frc2::InstantCommand([this] {m_claw.Run(0.0);}));
+
+    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kA).WhenPressed(FollowPPPathCMD(&m_drive, "Straight Line", true, true));
+
+    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kB).WhenPressed(FollowPPPathCMD(&m_drive, "Hook", true, true));
+
+    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kY).WhenPressed(FollowPPPathCMD(&m_drive, "Charge Station", true, true));
+
+    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kX).WhenPressed(FollowPPPathCMD(&m_drive, "Hook 2", true, true));
+
+    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kLeftStick).WhenPressed(FollowPPPathCMD(&m_drive, "Cone and Balance", true, true));
 
     // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kStart).WhenPressed(frc2::InstantCommand([this] {m_drive.ResetEncoders();}));
 

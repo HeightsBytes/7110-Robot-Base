@@ -75,6 +75,8 @@ void DriveSubsystem::Periodic() {
 
   m_field.SetRobotPose(m_poseEstimator.GetEstimatedPosition());
 
+  // printf("speed: %5.2f\tangle: %5.2f\n", m_rearLeft.GetState().speed.value(), m_rearLeft.GetState().angle.Degrees().value());
+
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -105,6 +107,10 @@ void DriveSubsystem::DriveFieldRelative(frc::ChassisSpeeds speeds) {
   kDriveKinematics.DesaturateWheelSpeeds(&states, AutoConstants::kMaxSpeed);
 
   auto [fl, fr, bl, br] = states;
+  
+  frc::SmartDashboard::PutNumber("Angle", fl.angle.Degrees().value());
+
+  // printf("speed: %5.2f\t angle: %5.2f\n", fr.speed.value(), fr.angle.Degrees().value());
 
   m_frontLeft.SetDesiredState(fl);
   m_frontRight.SetDesiredState(fr);

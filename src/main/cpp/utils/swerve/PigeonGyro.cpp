@@ -83,7 +83,9 @@ double PigeonGyro::GetCompassHeading() const {
 
   printf("Angle: %5.2f\n", angle);
 
-  return angle;
+  return std::lround(angle) % 360;
+
+  // return angle;
 
 }
 

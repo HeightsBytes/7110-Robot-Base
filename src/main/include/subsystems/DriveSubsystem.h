@@ -124,8 +124,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   frc::HolonomicDriveController GetController() {
     return frc::HolonomicDriveController{
-      frc2::PIDController{AutoConstants::kPXController, 0, 0},
-      frc2::PIDController{AutoConstants::kPYController, 0, 0},
+      frc2::PIDController{AutoConstants::kPXController+0.5, 0, 0},
+      frc2::PIDController{AutoConstants::kPYController+0.5, 0, 0},
       frc::ProfiledPIDController<units::radian>{
         1, 0, 0, AutoConstants::kThetaControllerConstraints
       }};

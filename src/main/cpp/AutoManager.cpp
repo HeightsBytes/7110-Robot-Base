@@ -25,16 +25,24 @@ AutoManager::AutoManager(ArmSubsystem* arm, ClawSubsystem* claw, DriveSubsystem*
     m_builder = new SwerveAutoBuilder(
         [drive] {return drive->GetPose();},
         [drive](auto pose) {drive->SetPose(pose);},
-        PIDConstants(AutoConstants::kPXController, 0, 0),
-        PIDConstants(AutoConstants::kPThetaController, 0, 0),
-        [drive](auto speeds) {drive->DriveFieldRelative(speeds);},
+        PIDConstants(1, 0, 0), 
+        PIDConstants(1, 0, 0), 
+        [drive](auto speeds) {drive->SetModuleStates(drive->kDriveKinematics.ToSwerveModuleStates(speeds));},
         m_eventMap, 
         {drive},
         true
     );
 
-    m_chooser.AddOption("Cone And Balance", PathPlanner::loadPathGroup("Cone And Balance", 
-        {PathConstraints(AutoConstants::kMaxSpeed, AutoConstants::kMaxAcceleration)}));
+    // m_chooser.AddOption("Cone And Balance", PathPlanner::loadPathGroup("Cone And Balance", 
+    //     {PathConstraints(AutoConstants::kMaxSpeed, AutoConstants::kMaxAcceleration)}));
+    m_chooser.AddOption("Cone and Balance", 
+        PathPlanner::loadPathGroup("Cone and Balance", {PathConstraints(AutoConstants::kMaxSpeed, AutoConstants::kMaxAcceleration)}));
+
+    m_chooser.AddOption("Back Forth", 
+        PathPlanner::loadPathGroup("BackForth", {PathConstraints(AutoConstants::kMaxSpeed, AutoConstants::kMaxAcceleration)}));
+
+    m_chooser.AddOption("Straight Line", 
+        PathPlanner::loadPathGroup("Straight Line", {PathConstraints(AutoConstants::kMaxSpeed, AutoConstants::kMaxAcceleration)}));
 
     frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
     

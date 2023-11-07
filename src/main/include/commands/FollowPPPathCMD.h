@@ -30,7 +30,7 @@
 class FollowPPPathCMD
     : public frc2::CommandHelper<frc2::CommandBase, FollowPPPathCMD> {
  public:
-  FollowPPPathCMD(DriveSubsystem* drive, std::string path, bool vision);
+  FollowPPPathCMD(DriveSubsystem* drive, std::string path, bool vision, bool isRed);
 
   void Initialize() override;
 
@@ -39,9 +39,15 @@ class FollowPPPathCMD
   void End(bool interrupted) override;
 
   bool IsFinished() override;
+
+  frc::Pose2d ReflectPose(frc::Pose2d pose);
+
   private:
   DriveSubsystem* m_drive;
   frc::Timer m_timer;
   pathplanner::PathPlannerTrajectory m_traj;
   bool m_visionEnabled;
+  bool m_isRed;
+  frc::Pose2d m_targetPose;
+  frc::HolonomicDriveController m_controller;
 };
